@@ -293,6 +293,9 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         public final V getValue()      { return value; }
         public final String toString() { return key + "=" + value; }
 
+        /**
+         * node结点的哈希值：将 key 的哈希值和 value 的哈希值进行异或运算
+         */
         public final int hashCode() {
             return Objects.hashCode(key) ^ Objects.hashCode(value);
         }
