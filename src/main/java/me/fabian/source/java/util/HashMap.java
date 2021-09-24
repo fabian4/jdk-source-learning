@@ -377,9 +377,11 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     }
 
     /**
+     * 获取 比 cap 大的最小的二进制数
      * Returns a power of two size for the given target capacity.
      */
     static final int tableSizeFor(int cap) {
+        // 避免 输入为2的幂时 返回了 cap * 2
         int n = cap - 1;
         n |= n >>> 1;
         n |= n >>> 2;
