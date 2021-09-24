@@ -339,6 +339,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      */
     static final int hash(Object key) {
         int h;
+        // 这里当 key 不为 null 的时候，将key的哈希值 和 右移16位的哈希值 做异或运算
         return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
     }
 
