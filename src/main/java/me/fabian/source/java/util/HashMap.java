@@ -630,26 +630,47 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      */
     final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
                    boolean evict) {
-        Node<K,V>[] tab; Node<K,V> p; int n, i;
+
+        Node<K,V>[] tab;
+        Node<K,V> p;
+        int n, i;
+
+        // table数组为空或者长度为零则 调用 resize() 来初始化数组
         if ((tab = table) == null || (n = tab.length) == 0)
             n = (tab = resize()).length;
+
+        // 计算数组下标，如果结点为空则新建结点放入
         if ((p = tab[i = (n - 1) & hash]) == null)
             tab[i] = newNode(hash, key, value, null);
         else {
-            Node<K,V> e; K k;
+
+            Node<K,V> e;
+            K k;
+
+            // 如果和头节点哈希值相等，则直接命中头节点
             if (p.hash == hash &&
                 ((k = p.key) == key || (key != null && key.equals(k))))
                 e = p;
+
+            // 如果是树节点进行红黑树的操作
             else if (p instanceof TreeNode)
                 e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
+
+            // 剩下的就是链表节点操作
             else {
                 for (int binCount = 0; ; ++binCount) {
+
+                    // 走到尾结点则新建节点追加在后面
                     if ((e = p.next) == null) {
                         p.next = newNode(hash, key, value, null);
+
+                        // 如果链表长度超过阈值则转化为红黑树
                         if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
                             treeifyBin(tab, hash);
                         break;
                     }
+
+                    // 当未走到尾结点时，根据哈希值是否相等来判断是否命中
                     if (e.hash == hash &&
                         ((k = e.key) == key || (key != null && key.equals(k))))
                         break;
@@ -658,15 +679,23 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             }
             if (e != null) { // existing mapping for key
                 V oldValue = e.value;
+                // 根据标识位判断是否替换
                 if (!onlyIfAbsent || oldValue == null)
                     e.value = value;
+
+                // 提供给 LinkedHashMap 的回调
                 afterNodeAccess(e);
                 return oldValue;
             }
         }
+
+        // 更新修改次数来保证迭代器的快速失败机制
         ++modCount;
+        // 超过阈值就扩容
         if (++size > threshold)
             resize();
+
+        // 提供给 LinkedHashMap 的回调
         afterNodeInsertion(evict);
         return null;
     }
