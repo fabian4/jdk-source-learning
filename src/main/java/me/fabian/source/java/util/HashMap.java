@@ -725,6 +725,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         int oldCap = (oldTab == null) ? 0 : oldTab.length;
         int oldThr = threshold;
         int newCap, newThr = 0;
+        // 当原结构有数据的时候
         if (oldCap > 0) {
             // 如果之前的容量大于最大容量，即将阈值调整到最大并不再扩容
             if (oldCap >= MAXIMUM_CAPACITY) {
@@ -737,21 +738,31 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                      oldCap >= DEFAULT_INITIAL_CAPACITY)
                 newThr = oldThr << 1; // double threshold
         }
+
+        // 如果一开始给定了初始容量，就取初始化时的值
         else if (oldThr > 0) // initial capacity was placed in threshold
             newCap = oldThr;
+
+        // 最后采取默认值
         else {               // zero initial threshold signifies using defaults
             newCap = DEFAULT_INITIAL_CAPACITY;
             newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
         }
+
+        // 通过最大容量和负载因子计算阈值
         if (newThr == 0) {
             float ft = (float)newCap * loadFactor;
             newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
                       (int)ft : Integer.MAX_VALUE);
         }
         threshold = newThr;
+
+        // 根据 newCap 创建新的数组
         @SuppressWarnings({"rawtypes","unchecked"})
         Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
         table = newTab;
+
+        // 如果不为空，搬运之前map的存储内容
         if (oldTab != null) {
             for (int j = 0; j < oldCap; ++j) {
                 Node<K,V> e;
