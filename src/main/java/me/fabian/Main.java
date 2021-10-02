@@ -8,8 +8,5 @@ import java.util.HashMap;
  */
 public class Main {
     public static void main(String[] args) {
-        HashMap<String, String> hashMap = new HashMap<>(32);
-
-        hashMap.put("qwe3", "dsca");
     }
 }
